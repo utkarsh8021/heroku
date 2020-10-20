@@ -1,0 +1,127 @@
+<!-- Created: Alfredo Vieira Neto
+Student Number: 301106786
+Subject: COMP229 - Web Application Development
+Date: 10/01/2020
+Institution: Centennial College
+Component: Bussiness Contacts List -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% title="Bussiness Contacts List"; %>
+  </head>
+  <body class="container">
+    <header><%- include('partials/header') %></header>
+
+    <main>
+      <div class="high">
+        <h1 class="high_title">Pulkit</h1>
+        <p class="high_subtitle">Bussiness Contacts List</p>
+      </div>
+
+      <div class="center_content">
+        <table id="customers">
+          <tr>
+            <th id="table_corner_left">Contact Name</th>
+            <th>Contact Username</th>
+            <th>Contact Number</th>
+            <th>Contact Email</th>
+            <th style="text-align: center">Edit</th>
+            <th style="text-align: center" id="table_corner_right">Delete</th>
+          </tr>
+          <% users.forEach(function(user) { %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.username %></td>
+            <td><%= user.number %></td>
+            <td><%= user.email %></td>
+            <td style="text-align: center">
+              <button
+                type="button"
+                onclick="productEdit('<%= JSON.stringify(user) %>');"
+                class="btn_action"
+              >
+                ✎
+              </button>
+            </td>
+            <td style="text-align: center">
+              <button
+                type="button"
+                onclick="location.href='/bussiness_contacts/detele/<%= user._id %>';"
+                class="btn_action delete"
+              >
+                ✕
+              </button>
+            </td>
+          </tr>
+          <% }); %>
+        </table>
+      </div>
+      <%- include('partials/edit') %>
+    </main>
+    <script>
+      function closeBackdrop() {
+        const backdrop = document.getElementById("backdrop");
+        const sidebar = document.getElementById("sidebar");
+        backdrop.style.display = "none";
+        sidebar.style.display = "none";
+      }
+      function productEdit(user_string) {
+        let user = JSON.parse(user_string);
+        const backdrop = document.getElementById("backdrop");
+        const sidebar = document.getElementById("sidebar");
+        backdrop.style.display = "block";
+        sidebar.style.display = "block";
+        backdrop.addEventListener("click", function () {
+          closeBackdrop();
+        });
+        sidebar.innerHTML = "";
+        let edit_form = document.createElement("FORM");
+        edit_form.className = "form_sidebar";
+        edit_form.method = "post";
+        edit_form.action = `/bussiness_contacts/edit/${user._id}`;
+        for (attr in user) {
+          switch (attr) {
+            case "username":
+              edit_form.innerHTML += `<div class="form__group">
+                                                        <label class="form__label" >Username:</label>
+                                                        <input class="form__input" type="text" name="username" value="${user[attr]}">
+                                                    </div>`;
+              break;
+            case "pass":
+              edit_form.innerHTML += `<div class="form__group">
+                                                        <label class="form__label" >Password:</label>
+                                                        <input class="form__input" type="text" name="pass" value="${user[attr]}">
+                                                    </div>`;
+              break;
+            case "name":
+              edit_form.innerHTML += `<div class="form__group">
+                                                        <label class="form__label" >Name:</label>
+                                                        <input class="form__input" type="text" name="name" value="${user[attr]}">
+                                                    </div>`;
+              break;
+            case "number":
+              edit_form.innerHTML += `<div class="form__group">
+                                                        <label class="form__label" >Number:</label>
+                                                        <input class="form__input" type="text" name="number" value="${user[attr]}">
+                                                    </div>`;
+              break;
+            case "email":
+              edit_form.innerHTML += `<div class="form__group">
+                                                        <label class="form__label" >Email:</label>
+                                                        <input class="form__input" type="text" name="email" value="${user[attr]}">
+                                                    </div>`;
+              break;
+            default:
+              break;
+          }
+        }
+        edit_form.innerHTML += `<input style="transform: translateY(11px) translateX(-159px);" class="form__submit" type="submit" value="Update">
+            <input style="transform: translateY(-38px) translateX(5px); color: rgb(216, 79, 79);" onclick="location.href='/bussiness_contacts/detele/${user._id}';" class="form__submit" type="button" value="Delete">
+            <input style="transform: translate(170px, -87px); color: #575757;" onclick="closeBackdrop();" class="form__submit" type="button" value="Cancel">`;
+        sidebar.appendChild(edit_form);
+      }
+    </script>
+    <%- include('partials/footer') %>
+  </body>
+</html>
