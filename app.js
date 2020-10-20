@@ -39,6 +39,11 @@ app.get("/contact", function (req, res) {
   res.render("contact.ejs");
 });
 
+// contact page
+app.get("/login", function (req, res) {
+  res.render("login.ejs");
+});
+
 mongoose
   .connect(
     "mongodb+srv://portfolio:qwerty@1234@cluster0.70zvn.mongodb.net/contact?retryWrites=true&w=majority",
